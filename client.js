@@ -250,7 +250,7 @@ window.__ModuleLoader__.load({
       }, [])
 
       const settle = async (outcome) => {
-        if (waiting.current || !pending.answerable) return
+        if (waiting.current || pending.answerable === false) return
         waiting.current = true
         const text = reason.trim().slice(0, MAX_REASON_LENGTH)
         const sendsReason = outcome === 'rejected' && text.length > 0 && sentReason.current !== text
@@ -314,7 +314,7 @@ window.__ModuleLoader__.load({
       const detail = pending.callId !== undefined && typeof props.useChat === 'function'
         ? h(CommandDetail, { useChat: props.useChat, callId: pending.callId })
         : null
-      const disabled = busy || !pending.answerable
+      const disabled = busy || pending.answerable === false
       const stripText = phase === 'sending'
         ? t('sending')
         : phase === 'allowing'
