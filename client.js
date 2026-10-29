@@ -261,6 +261,7 @@ window.__ModuleLoader__.load({
           if (sendsReason) {
             await props.sendReason(pending, text)
             sentReason.current = text
+            if (active.current) setPhase('rejecting')
           }
           stage = 'answer'
           await pending.answer(outcome)
