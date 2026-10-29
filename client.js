@@ -14,37 +14,37 @@ window.__ModuleLoader__.load({
     /** Simplified Chinese copy. */
     const zh = {
       waiting: '等待审批',
-      sending: '正在发送原因…',
+      sending: '正在提交原因…',
       detailAria: '审批详情',
       escalation: '工具 {toolName} 请求越权执行',
       reject: '拒绝',
       allowOnce: '允许一次',
       reasonLabel: '拒绝原因（可选）',
-      reasonPlaceholder: '写下拒绝的理由，会随「拒绝」一起发给模型；留空则只发送拒绝。',
-      reasonHint: 'Ctrl/⌘ + Enter 拒绝并发送原因',
-      sendFailed: '原因发送失败：{message}',
+      reasonPrefix: '【审批请求已拒绝】原因：',
+      reasonPlaceholder: '写下拒绝的理由，会附在拒绝结果里交给模型；留空则只发送拒绝。',
+      reasonHint: 'Ctrl/⌘ + Enter 拒绝并附上原因',
+      sendFailed: '原因提交失败：{message}',
       rejectFailed: '拒绝没有送达：{message}',
       rejecting: '正在拒绝…',
       allowing: '正在允许…',
-      reasonMessage: '【审批请求已拒绝】原因：{reason}',
     }
 
     /** English copy, checked against the Chinese key set. */
     const en = {
       waiting: 'Waiting for approval',
-      sending: 'Sending rejection reason…',
+      sending: 'Submitting rejection reason…',
       detailAria: 'Approval details',
       escalation: 'Tool {toolName} requests privileged execution',
       reject: 'Reject',
       allowOnce: 'Allow once',
       reasonLabel: 'Rejection reason (optional)',
-      reasonPlaceholder: 'Explain why you reject this request. It is sent to the model with the rejection; leave empty to reject without a reason.',
-      reasonHint: 'Ctrl/⌘ + Enter rejects and sends the reason',
-      sendFailed: 'Could not send the reason: {message}',
+      reasonPrefix: '[Approval request rejected] Reason: ',
+      reasonPlaceholder: 'Explain why you reject this request. It is attached to the rejection result for the model; leave empty to reject without a reason.',
+      reasonHint: 'Ctrl/⌘ + Enter rejects and attaches the reason',
+      sendFailed: 'Could not submit the reason: {message}',
       rejectFailed: 'The rejection was not delivered: {message}',
       rejecting: 'Rejecting…',
       allowing: 'Allowing…',
-      reasonMessage: '[Approval request rejected] Reason: {reason}',
     }
 
     /**
@@ -128,67 +128,46 @@ window.__ModuleLoader__.load({
       return text.length > 0 ? text : 'unknown error'
     }
 
-    /** Mint a prompt request id; the browser UUID is available in the Web GUI. */
-    function newRequestId() {
-      try {
-        if (globalThis.crypto !== undefined && typeof globalThis.crypto.randomUUID === 'function') {
-          return globalThis.crypto.randomUUID()
-        }
-      } catch {
-        // fall through to the deterministic-enough fallback
-      }
-      return 'why-reject-me-' + Date.now().toString(36) + '-' + Math.random().toString(36).slice(2, 10)
-    }
-
-    /** Sample the browser time zone; an invalid one would be rejected by the Host. */
-    function clientTimeZone() {
-      try {
-        const zone = Intl.DateTimeFormat().resolvedOptions().timeZone
-        return typeof zone === 'string' && zone.length > 0 ? zone : undefined
-      } catch {
-        return undefined
-      }
-    }
-
     /**
-     * Send one rejection reason into the pending approval's Session.
+     * Hand one rejection reason to the Host half.
      *
-     * `mode: "steer"` enters the next-step inbox, so the model sees the reason
-     * immediately after the rejection tool result (or at the start of the next
-     * turn when the rejection ends this turn first).
+     * The Host parks it in memory and appends it to the rejected Tool call's
+     * `tool/result`; the model reads it there, exactly like an
+     * `ask_user_question` answer. No user message is created.
      */
-    async function sendReason(ctx, pending, text) {
-      const remote = ctx.remote
-      if (remote === undefined || remote.session === undefined || typeof remote.session.prompt !== 'function') {
-        throw new Error('session.prompt is unavailable in this composition')
-      }
-      const reasonText = String(text ?? '').trim().slice(0, MAX_REASON_LENGTH)
-      if (reasonText.length === 0) return
+    async function sendReason(pending, text, prefix) {
+      const reason = String(text ?? '').trim().slice(0, MAX_REASON_LENGTH)
+      if (reason.length === 0) return
       const sessionId = pending !== null && typeof pending === 'object' ? pending.sessionId : undefined
+      const callId = pending !== null && typeof pending === 'object' ? pending.callId : undefined
       if (typeof sessionId !== 'string' || sessionId.length === 0) {
         throw new Error('the pending approval has no Session identity')
       }
-      const t = ctx.locale.bind(NS)
-      const request = {
-        requestId: newRequestId(),
-        sessionId,
-        mode: 'steer',
-        content: [{ type: 'text', text: t('reasonMessage', { reason: reasonText }) }],
+      if (typeof callId !== 'string' || callId.length === 0) {
+        throw new Error('the pending approval has no Tool call identity')
       }
-      const zone = clientTimeZone()
-      if (zone !== undefined) request.clientTimeZone = zone
-      const result = await remote.session.prompt(request)
-      // Generated Remote methods answer with a `RemoteResult` envelope; a
-      // business failure is `{ ok: false, error }`, not a thrown value.
-      if (result !== null && typeof result === 'object' && typeof result.ok === 'boolean') {
-        if (!result.ok) {
-          throw result.error instanceof Error ? result.error : new Error('the Session did not accept the reason')
+      const marker = typeof prefix === 'string' ? prefix.slice(0, 120) : undefined
+      const response = await fetch('/api/dsh-why-reject-me/reason', {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({
+          sessionId,
+          callId,
+          reason,
+          ...(marker === undefined ? {} : { prefix: marker }),
+        }),
+      })
+      if (response.ok) return
+      let detail = ''
+      try {
+        const payload = await response.json()
+        if (payload !== null && typeof payload === 'object' && typeof payload.error === 'string') {
+          detail = payload.error
         }
-        return
+      } catch {
+        // keep the status-only message
       }
-      if (result !== null && typeof result === 'object' && result.accepted === false) {
-        throw new Error('the Session did not accept the reason')
-      }
+      throw new Error(detail.length > 0 ? `HTTP ${response.status}: ${detail}` : `HTTP ${response.status}`)
     }
 
     /** Whether one Session pending interaction is the approval takeover we own. */
@@ -399,8 +378,8 @@ window.__ModuleLoader__.load({
       return h(ApprovalReasonPanel, { ...props, key: approval.key })
     }
 
-    /** Required Client services: slot registry, copy, and the generated Session Remote. */
-    const inject = ['slots', 'locale', 'remote', 'remote.session']
+    /** Required Client services: slot registry and copy. */
+    const inject = ['slots', 'locale']
 
     /**
      * Install the approval takeover.
@@ -422,7 +401,7 @@ window.__ModuleLoader__.load({
         locale: NS,
         inject: () => ({
           resolveReason: (reason) => ctx.locale.resolveText(reason),
-          sendReason: (pending, text) => sendReason(ctx, pending, text),
+          sendReason: (pending, text) => sendReason(pending, text, ctx.locale.bind(NS)('reasonPrefix')),
         }),
       }, WhyRejectPanel))
     }

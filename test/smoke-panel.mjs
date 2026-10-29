@@ -61,11 +61,9 @@ const ctx = {
       return () => {}
     },
     bind() {
-      const templates = { reasonMessage: '【审批请求已拒绝】原因：{reason}' }
       return (key, params) => {
-        const template = templates[key] ?? key
-        if (params === undefined) return template
-        return Object.entries(params).reduce((text, [name, value]) => text.replaceAll(`{${name}}`, String(value)), template)
+        if (params === undefined) return key
+        return Object.entries(params).reduce((text, [name, value]) => text.replaceAll(`{${name}}`, String(value)), key)
       }
     },
     resolveText(value) {
@@ -81,7 +79,6 @@ const ctx = {
       return () => {}
     },
   },
-  remote: { session: { prompt: async () => ({ accepted: true }) } },
 }
 client.apply(ctx)
 const registration = registrations[0]
@@ -124,6 +121,7 @@ function makeApproval() {
       kind: 'approval',
       key: 'approval:test',
       sessionId: 'session-1',
+      callId: 'call-1',
       toolName: 'pwsh',
       reason: 'escalate sandbox to danger-full-access: need to write outside the workspace',
       answerable: true,

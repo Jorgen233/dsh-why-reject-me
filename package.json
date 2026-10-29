@@ -1,11 +1,11 @@
 {
   "name": "dsh-why-reject-me",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "private": true,
-  "description": "Adds an optional rejection reason to DSH permission approval prompts and sends it to the model.",
+  "description": "Adds an optional rejection reason to DSH permission approval prompts and delivers it with the rejected tool result.",
   "type": "module",
   "scripts": {
-    "test": "node test/smoke-client.mjs && node test/smoke-panel.mjs"
+    "test": "node test/smoke-client.mjs && node test/smoke-panel.mjs && node test/smoke-host.mjs"
   },
   "exports": {
     ".": "./index.js",
@@ -29,8 +29,6 @@
       "platform": "web",
       "immediately": true,
       "inject": [
-        "@deepseek-ai/dsh-api-remotes",
-        "@deepseek-ai/dsh-api-session-controller",
         "@deepseek-ai/dsh-client-locale",
         "@deepseek-ai/dsh-client-ui-approval",
         "@deepseek-ai/dsh-client-ui-conversation"
