@@ -201,6 +201,18 @@ window.__ModuleLoader__.load({
     }
 
     /**
+     * Whether the addressed Session is a subagent conversation.
+     *
+     * Subagent sessions keep the shipped approval behavior: the Host disables
+     * approval prompts there and auto-rejects escalation, so this plugin must
+     * not claim their pending interactions (and never asks for a reason).
+     * @param session - current Session snapshot from the composer owner props.
+     */
+    function isSubagentSession(session) {
+      return session !== undefined && session !== null && session.subagent != null
+    }
+
+    /**
      * Render the command text of the Tool call correlated with an approval.
      * Mirrors the shipped `ApprovalCommand`, using the standard `useChat` prop
      * instead of the shipped detail slot so this entry declares no children.
@@ -401,8 +413,12 @@ window.__ModuleLoader__.load({
         name: 'conversation.composer',
         // Lower number wins in a chain: the shipped approval takeover is 1,
         // and the ordinary composer entries decline while an approval is pending.
+        // Subagent conversations are explicitly left to the shipped behavior.
         priority: 0,
-        select: ({ pendingInteraction }) => isApproval(pendingInteraction) ? pendingInteraction : null,
+        select: ({ pendingInteraction, session }) => {
+          if (isSubagentSession(session)) return null
+          return isApproval(pendingInteraction) ? pendingInteraction : null
+        },
         locale: NS,
         inject: () => ({
           resolveReason: (reason) => ctx.locale.resolveText(reason),

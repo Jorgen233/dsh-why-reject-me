@@ -85,6 +85,9 @@ if (typeof entry.component !== 'function') throw new Error('missing component')
 
 const approval = { kind: 'approval', sessionId: 's1', answer() {}, key: 'approval:1' }
 if (entry.options.select({ pendingInteraction: approval }) !== approval) throw new Error('select did not claim an approval')
+if (entry.options.select({ pendingInteraction: approval, session: { subagent: null } }) !== approval) throw new Error('select refused a root session')
+const subagentSession = { subagent: { address: { kind: 'subagent', parentSessionId: 'p1', childSessionId: 'c1', mode: 'one-shot' } } }
+if (entry.options.select({ pendingInteraction: approval, session: subagentSession }) !== null) throw new Error('select claimed a subagent session')
 for (const other of [undefined, null, { kind: 'question' }, { kind: 'approval' }]) {
   if (entry.options.select({ pendingInteraction: other }) !== null) throw new Error(`select claimed ${JSON.stringify(other)}`)
 }
