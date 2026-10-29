@@ -95,6 +95,10 @@ async function appendReason(exec, result, next) {
   const key = keyOf(sessionId, exec.callId)
   const stored = reasons.get(key)
   if (stored === undefined) return decision
+  if (stored.expiresAt <= Date.now()) {
+    reasons.delete(key)
+    return decision
+  }
   reasons.delete(key)
   const content = [...(decision.content ?? result.content), {
     type: 'text',
