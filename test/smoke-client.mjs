@@ -43,7 +43,7 @@ const ctx = {
       return () => {}
     },
     bind() {
-      const templates = { reasonMessage: '【权限请求已拒绝】原因：{reason}' }
+      const templates = { reasonMessage: '【审批请求已拒绝】原因：{reason}' }
       return (key, params) => {
         const template = templates[key] ?? key
         if (params === undefined) return template

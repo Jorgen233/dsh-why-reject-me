@@ -26,7 +26,7 @@ window.__ModuleLoader__.load({
       rejectFailed: '拒绝没有送达：{message}',
       rejecting: '正在拒绝…',
       allowing: '正在允许…',
-      reasonMessage: '【权限请求已拒绝】原因：{reason}',
+      reasonMessage: '【审批请求已拒绝】原因：{reason}',
     }
 
     /** English copy, checked against the Chinese key set. */
@@ -44,7 +44,7 @@ window.__ModuleLoader__.load({
       rejectFailed: 'The rejection was not delivered: {message}',
       rejecting: 'Rejecting…',
       allowing: 'Allowing…',
-      reasonMessage: '[Permission request rejected] Reason: {reason}',
+      reasonMessage: '[Approval request rejected] Reason: {reason}',
     }
 
     /**
