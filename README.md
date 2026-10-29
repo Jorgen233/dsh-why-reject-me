@@ -2,8 +2,8 @@
 
 给 DSH 的权限审批弹窗加一个可选的「拒绝原因」。拒绝时原因会附在被拒绝工具的 tool result 里交给模型；留空则完全保持原生行为。
 
-> 状态：v0.3.0，改为 `ask_user_question` 同级的 tool result 注入；Host 半与路由已实现，
-> 待重启 Desktop 后做真实审批验证。
+> 状态：v0.3.0，改为 `ask_user_question` 同级的 tool result 注入；已完成真实审批验证
+> （原因进入 tool result，不产生用户消息；留空保持原生拒绝）。
 
 ## 它做了什么
 
