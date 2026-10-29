@@ -288,6 +288,7 @@ window.__ModuleLoader__.load({
           return
         }
         if (event.key === 'Escape') {
+          if (event.ctrlKey || event.metaKey || event.altKey || event.shiftKey) return
           if (field !== null && reason.trim().length > 0) {
             event.preventDefault()
             field.blur()
