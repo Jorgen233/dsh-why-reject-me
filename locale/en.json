@@ -1,0 +1,6 @@
+{
+  "meta": {
+    "title": "Why you reject me",
+    "description": "Adds an optional rejection reason to permission approval prompts and sends it to the model as a user message; leaving it empty keeps the original rejection behavior."
+  }
+}
