@@ -1,6 +1,6 @@
 {
   "name": "dsh-why-reject-me",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "private": true,
   "description": "Adds an optional rejection reason to DSH permission approval prompts and delivers it with the rejected tool result.",
   "type": "module",

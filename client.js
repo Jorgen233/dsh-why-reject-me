@@ -8,8 +8,60 @@ window.__ModuleLoader__.load({
     const NS = 'why-reject-me'
     /** Hard cap for one rejection reason; the textarea enforces the same value. */
     const MAX_REASON_LENGTH = 2000
+    /** Keep an unsent draft while the user switches Sessions and comes back. */
+    const DRAFT_TTL_MS = 30 * 60 * 1000
     /** Unique style tag id so HMR reloads can find (and update) the sheet. */
     const STYLE_ID = 'dsh-why-reject-me/panel.css'
+
+    /** @type {Map<string, { text: string, expiresAt: number }>} */
+    const drafts = new Map()
+
+    /** One draft identity: Session + Tool call, with the pending key as fallback. */
+    function draftKey(pending) {
+      if (pending === null || typeof pending !== 'object') return undefined
+      const sessionId = typeof pending.sessionId === 'string' && pending.sessionId.length > 0
+        ? pending.sessionId
+        : undefined
+      if (sessionId === undefined) return undefined
+      if (typeof pending.callId === 'string' && pending.callId.length > 0) {
+        return `${sessionId}\u0000${pending.callId}`
+      }
+      if (typeof pending.key === 'string' && pending.key.length > 0) {
+        return `${sessionId}\u0000${pending.key}`
+      }
+      return undefined
+    }
+
+    /** Read one draft, dropping it once its approval is long gone. */
+    function readDraft(key) {
+      if (key === undefined) return ''
+      const entry = drafts.get(key)
+      if (entry === undefined) return ''
+      if (entry.expiresAt <= Date.now()) {
+        drafts.delete(key)
+        return ''
+      }
+      return entry.text
+    }
+
+    /** Store one draft; an emptied field removes the entry. */
+    function writeDraft(key, text) {
+      if (key === undefined) return
+      if (text.length === 0) {
+        drafts.delete(key)
+        return
+      }
+      const now = Date.now()
+      for (const [keyOfEntry, entry] of drafts) {
+        if (entry.expiresAt <= now) drafts.delete(keyOfEntry)
+      }
+      drafts.set(key, { text, expiresAt: now + DRAFT_TTL_MS })
+    }
+
+    /** Drop one draft once its approval is answered. */
+    function clearDraft(key) {
+      if (key !== undefined) drafts.delete(key)
+    }
 
     /** Simplified Chinese copy. */
     const zh = {
@@ -225,7 +277,8 @@ window.__ModuleLoader__.load({
     function ApprovalReasonPanel(props) {
       const pending = props.matched
       const t = props.t
-      const [reason, setReason] = React.useState('')
+      const draftId = draftKey(pending)
+      const [reason, setReason] = React.useState(readDraft(draftId))
       const [phase, setPhase] = React.useState(null)
       const [error, setError] = React.useState(null)
       const waiting = React.useRef(false)
@@ -239,6 +292,14 @@ window.__ModuleLoader__.load({
           active.current = false
         }
       }, [])
+
+      React.useEffect(() => {
+        setReason(readDraft(draftId))
+      }, [draftId])
+
+      React.useEffect(() => {
+        if (pending.answerable === false) clearDraft(draftId)
+      }, [pending.answerable, draftId])
 
       const settle = async (outcome) => {
         if (waiting.current || pending.answerable === false) return
@@ -256,6 +317,7 @@ window.__ModuleLoader__.load({
           }
           stage = 'answer'
           await pending.answer(outcome)
+          clearDraft(draftId)
         } catch (cause) {
           if (!active.current) return
           waiting.current = false
@@ -344,7 +406,9 @@ window.__ModuleLoader__.load({
             'aria-label': t('reasonLabel'),
             disabled,
             onChange: (event) => {
-              setReason(event.target.value)
+              const next = event.target.value
+              setReason(next)
+              writeDraft(draftId, next)
               if (error !== null) setError(null)
             },
           }),

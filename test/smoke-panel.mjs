@@ -113,15 +113,20 @@ function fresh() {
   hookStates = []
 }
 
-function makeApproval() {
+function makeApproval(options = {}) {
+  const {
+    key = 'approval:test',
+    sessionId = 'session-1',
+    callId = 'call-1',
+  } = options
   const calls = []
   return {
     calls,
     approval: {
       kind: 'approval',
-      key: 'approval:test',
-      sessionId: 'session-1',
-      callId: 'call-1',
+      key,
+      sessionId,
+      callId,
       toolName: 'pwsh',
       reason: 'escalate sandbox to danger-full-access: need to write outside the workspace',
       answerable: true,
@@ -233,6 +238,42 @@ function tick() {
   const alert = walk(tree).find((node) => node.props?.role === 'alert')
   if (alert === undefined) throw new Error('missing failure alert')
   if (!String(alert.props.children).includes('boom')) throw new Error('failure text missing the cause')
+}
+
+// 5. Unsent draft survives switching away and back.
+{
+  fresh()
+  const { approval } = makeApproval({ key: 'approval:draft', callId: 'call-draft' })
+  const props = propsFor(approval, { sendReason: async () => {} })
+  let tree = render(props)
+  textareaOf(tree).props.onChange({ target: { value: '切换会话后还要在' } })
+  tree = render(props)
+  if (textareaOf(tree).props.value !== '切换会话后还要在') throw new Error('draft not held while mounted')
+
+  fresh() // switch to another conversation: the composer unmounts
+  render(propsFor(makeApproval({ key: 'approval:other', callId: 'call-other', sessionId: 'session-2' }), {
+    sendReason: async () => {},
+  }))
+  fresh() // switch back: a fresh mount must read the held draft
+  tree = render(props)
+  if (textareaOf(tree).props.value !== '切换会话后还要在') throw new Error('draft was lost on Session switch')
+}
+
+// 6. Answering the approval clears the draft.
+{
+  fresh()
+  const { approval, calls } = makeApproval({ key: 'approval:clear', callId: 'call-clear' })
+  const props = propsFor(approval, { sendReason: async () => {} })
+  let tree = render(props)
+  textareaOf(tree).props.onChange({ target: { value: '发送后清掉' } })
+  tree = render(props)
+  buttonsOf(tree)[0].props.onClick()
+  await tick()
+  if (calls.length !== 1 || calls[0][1] !== 'rejected') throw new Error(`unexpected answers: ${JSON.stringify(calls)}`)
+
+  fresh()
+  tree = render(props)
+  if (textareaOf(tree).props.value !== '') throw new Error('answered approval kept its draft')
 }
 
 console.log('panel smoke ok')

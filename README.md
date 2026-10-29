@@ -18,6 +18,8 @@
      `【审批请求已拒绝】原因：…` 追加到这条 tool result 的 content；
 - 原因不会成为一条 `user/message`，也不会单独起一轮；模型在同一个 tool result 里读到它，
   与 `ask_user_question` 的答案同级；
+- 未发送的原因草稿会按 Session + Tool call 保留 30 分钟：切到其他对话再回来不会丢字；
+  审批被回答后清除；
 - 原因留空时不发请求，行为与原生一致；
 - 子代理会话不接管：运行时会在子代理上下文里自动拒绝提权，插件显式放弃这些审批，
   保持原生行为；
@@ -59,6 +61,7 @@ plugin_manager action=remove_bundle target=dsh-why-reject-me
   插件不会接管这类会话，因此没有原因输入框，拒绝文案仍是运行时的原文
   （`the user rejected ...`，与人工拒绝同文）。这是 DSH 核心策略，不是本插件能改的；
 - 原因上限 2000 字；Host 暂存 5 分钟未匹配到拒绝结果就丢弃；
+- 草稿只存在当前页面内存里：切会话不丢，但刷新页面会丢；
 - 依赖以下公开面：`conversation.composer` 链式插槽、`PendingApproval.kind/answer/callId`、
   `ctx.connection.fetch.register`、`tools/post-execute`、`SessionSnapshot.subagent`。
   DSH 大版本升级后若这些公开面变化，需要同步适配。
