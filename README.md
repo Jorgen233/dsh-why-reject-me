@@ -1,4 +1,4 @@
-# dsh-why-reject
+# dsh-why-reject-me
 
 给 DSH 的权限审批弹窗加一个可选的「拒绝原因」。拒绝时原因会作为一条用户消息发给模型；留空则完全保持原生行为。
 
@@ -30,7 +30,7 @@
 ## 安装
 
 ```text
-plugin_manager action=install_bundle target=<workspace>\dsh-why-reject
+plugin_manager action=install_bundle target=<workspace>\dsh-why-reject-me
 ```
 
 安装后刷新 Web GUI。插件会影响当前 profile 的所有会话。
@@ -38,9 +38,9 @@ plugin_manager action=install_bundle target=<workspace>\dsh-why-reject
 ## 卸载 / 回滚
 
 ```text
-plugin_manager action=set_bundle target=dsh-why-reject enabled=false
+plugin_manager action=set_bundle target=dsh-why-reject-me enabled=false
 # 或
-plugin_manager action=remove_bundle target=dsh-why-reject
+plugin_manager action=remove_bundle target=dsh-why-reject-me
 ```
 
 卸载后审批面板恢复为自带样式。

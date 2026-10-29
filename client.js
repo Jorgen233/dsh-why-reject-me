@@ -1,15 +1,15 @@
 window.__ModuleLoader__.load({
-  id: 'dsh-why-reject',
+  id: 'dsh-why-reject-me',
   factory(require) {
     const React = require('react')
     const h = React.createElement
 
     /** Locale namespace owned by this plugin. */
-    const NS = 'why-reject'
+    const NS = 'why-reject-me'
     /** Hard cap for one rejection reason; the textarea enforces the same value. */
     const MAX_REASON_LENGTH = 2000
     /** Unique style tag id so HMR reloads can find (and update) the sheet. */
-    const STYLE_ID = 'dsh-why-reject/panel.css'
+    const STYLE_ID = 'dsh-why-reject-me/panel.css'
 
     /** Simplified Chinese copy. */
     const zh = {
@@ -50,54 +50,54 @@ window.__ModuleLoader__.load({
     /**
      * Panel stylesheet, adapted from the shipped approval panel and primitives
      * Button so the takeover looks like the host surface. Class names are
-     * prefixed with `dwr_` to avoid colliding with any shipped stylesheet.
+     * prefixed with `dwrm_` to avoid colliding with any shipped stylesheet.
      */
     const css = {
-      root: 'dwr_root',
-      card: 'dwr_card',
-      strip: 'dwr_strip',
-      dot: 'dwr_dot',
-      body: 'dwr_body',
-      headline: 'dwr_headline',
-      command: 'dwr_command',
-      reasonLabel: 'dwr_reasonLabel',
-      reason: 'dwr_reason',
-      hint: 'dwr_hint',
-      error: 'dwr_error',
-      actionRow: 'dwr_actionRow',
-      button: 'dwr_btn',
-      medium: 'dwr_md',
-      outline: 'dwr_outline',
-      primary: 'dwr_primary',
-      reject: 'dwr_reject',
+      root: 'dwrm_root',
+      card: 'dwrm_card',
+      strip: 'dwrm_strip',
+      dot: 'dwrm_dot',
+      body: 'dwrm_body',
+      headline: 'dwrm_headline',
+      command: 'dwrm_command',
+      reasonLabel: 'dwrm_reasonLabel',
+      reason: 'dwrm_reason',
+      hint: 'dwrm_hint',
+      error: 'dwrm_error',
+      actionRow: 'dwrm_actionRow',
+      button: 'dwrm_btn',
+      medium: 'dwrm_md',
+      outline: 'dwrm_outline',
+      primary: 'dwrm_primary',
+      reject: 'dwrm_reject',
     }
 
     const STYLE_TEXT = `
-.dwr_root{padding:8px calc(var(--dsh-composer-side-clearance) + 16px) 12px;flex-direction:column;align-items:center;display:flex}
-.dwr_card{width:100%;max-width:var(--dsh-chat-content-width);border:1px solid var(--dsw-alias-state-warn-secondary);border-radius:var(--dsw-radius-xl);background:var(--dsw-specific-input-major);box-shadow:var(--dsw-shadow-lv2);--dsh-scrollbar-thumb:var(--dsw-alias-scrollbar-bg-l2);--dsh-scrollbar-thumb-hover:var(--dsw-alias-scrollbar-hover-l2);overflow:hidden}
-.dwr_strip{background:var(--dsw-alias-state-warn-tertiary);color:var(--dsw-alias-state-warn-primary);align-items:center;gap:8px;padding:10px 16px;font-size:13px;line-height:18px;display:flex}
-.dwr_dot{width:8px;height:8px;border-radius:999px;corner-shape:round;background:currentColor;flex:none}
-.dwr_dot[data-state=sending]{animation:dwr_pulse 1s ease-in-out infinite}
-@keyframes dwr_pulse{0%,100%{opacity:.35}50%{opacity:1}}
-.dwr_body{box-sizing:border-box;max-height:var(--dsh-composer-text-max-height);flex-direction:column;gap:6px;padding:12px 16px 0;display:flex;overflow-y:auto}
-.dwr_headline{color:var(--dsw-alias-label-primary);font-size:15px;font-weight:500;line-height:24px}
-.dwr_command{color:var(--dsw-alias-label-tertiary);font-family:var(--ds-font-family-code);word-break:break-all;font-size:13px;line-height:20px}
-.dwr_reasonLabel{margin-top:6px;color:var(--dsw-alias-label-secondary);font-size:12px;line-height:18px}
-.dwr_reason{box-sizing:border-box;width:100%;min-height:56px;max-height:160px;padding:8px 10px;border:1px solid var(--dsw-alias-border-l2);border-radius:8px;background:var(--dsw-alias-bg-base);color:var(--dsw-alias-label-primary);font:inherit;font-size:13px;line-height:19px;resize:vertical}
-.dwr_reason::placeholder{color:var(--dsw-alias-label-secondary)}
-.dwr_reason:focus{outline:none;border-color:var(--dsw-alias-brand-primary)}
-.dwr_reason:disabled{opacity:.6;cursor:not-allowed}
-.dwr_hint{color:var(--dsw-alias-label-secondary);font-size:12px;line-height:18px}
-.dwr_error{color:var(--dsw-alias-state-error-primary);font-size:12px;line-height:18px;word-break:break-word}
-.dwr_actionRow{justify-content:flex-end;gap:8px;padding:14px 16px;display:flex}
-.dwr_btn{box-sizing:border-box;display:inline-flex;align-items:center;justify-content:center;gap:4px;border:none;border-radius:var(--dsw-radius-md);cursor:pointer;font-size:14px;line-height:22px;color:var(--dsw-alias-label-primary);background:transparent;padding:0 14px}
-.dwr_btn:disabled{cursor:not-allowed;opacity:.4}
-.dwr_md{height:36px}
-.dwr_outline{border:.5px solid var(--dsw-alias-border-l3);background:transparent}
-.dwr_outline:hover:not(:disabled){background:var(--dsw-alias-interactive-bg-hover)}
-.dwr_reject:hover:not(:disabled){background:var(--dsw-alias-interactive-bg-hover-danger);color:var(--dsw-alias-state-error-primary);border-color:transparent}
-.dwr_primary{background:var(--dsw-alias-button-primary-fill);color:var(--dsw-alias-label-primary-foreground)}
-.dwr_primary:hover:not(:disabled){background:var(--dsw-alias-button-primary-hover)}
+.dwrm_root{padding:8px calc(var(--dsh-composer-side-clearance) + 16px) 12px;flex-direction:column;align-items:center;display:flex}
+.dwrm_card{width:100%;max-width:var(--dsh-chat-content-width);border:1px solid var(--dsw-alias-state-warn-secondary);border-radius:var(--dsw-radius-xl);background:var(--dsw-specific-input-major);box-shadow:var(--dsw-shadow-lv2);--dsh-scrollbar-thumb:var(--dsw-alias-scrollbar-bg-l2);--dsh-scrollbar-thumb-hover:var(--dsw-alias-scrollbar-hover-l2);overflow:hidden}
+.dwrm_strip{background:var(--dsw-alias-state-warn-tertiary);color:var(--dsw-alias-state-warn-primary);align-items:center;gap:8px;padding:10px 16px;font-size:13px;line-height:18px;display:flex}
+.dwrm_dot{width:8px;height:8px;border-radius:999px;corner-shape:round;background:currentColor;flex:none}
+.dwrm_dot[data-state=sending]{animation:dwrm_pulse 1s ease-in-out infinite}
+@keyframes dwrm_pulse{0%,100%{opacity:.35}50%{opacity:1}}
+.dwrm_body{box-sizing:border-box;max-height:var(--dsh-composer-text-max-height);flex-direction:column;gap:6px;padding:12px 16px 0;display:flex;overflow-y:auto}
+.dwrm_headline{color:var(--dsw-alias-label-primary);font-size:15px;font-weight:500;line-height:24px}
+.dwrm_command{color:var(--dsw-alias-label-tertiary);font-family:var(--ds-font-family-code);word-break:break-all;font-size:13px;line-height:20px}
+.dwrm_reasonLabel{margin-top:6px;color:var(--dsw-alias-label-secondary);font-size:12px;line-height:18px}
+.dwrm_reason{box-sizing:border-box;width:100%;min-height:56px;max-height:160px;padding:8px 10px;border:1px solid var(--dsw-alias-border-l2);border-radius:8px;background:var(--dsw-alias-bg-base);color:var(--dsw-alias-label-primary);font:inherit;font-size:13px;line-height:19px;resize:vertical}
+.dwrm_reason::placeholder{color:var(--dsw-alias-label-secondary)}
+.dwrm_reason:focus{outline:none;border-color:var(--dsw-alias-brand-primary)}
+.dwrm_reason:disabled{opacity:.6;cursor:not-allowed}
+.dwrm_hint{color:var(--dsw-alias-label-secondary);font-size:12px;line-height:18px}
+.dwrm_error{color:var(--dsw-alias-state-error-primary);font-size:12px;line-height:18px;word-break:break-word}
+.dwrm_actionRow{justify-content:flex-end;gap:8px;padding:14px 16px;display:flex}
+.dwrm_btn{box-sizing:border-box;display:inline-flex;align-items:center;justify-content:center;gap:4px;border:none;border-radius:var(--dsw-radius-md);cursor:pointer;font-size:14px;line-height:22px;color:var(--dsw-alias-label-primary);background:transparent;padding:0 14px}
+.dwrm_btn:disabled{cursor:not-allowed;opacity:.4}
+.dwrm_md{height:36px}
+.dwrm_outline{border:.5px solid var(--dsw-alias-border-l3);background:transparent}
+.dwrm_outline:hover:not(:disabled){background:var(--dsw-alias-interactive-bg-hover)}
+.dwrm_reject:hover:not(:disabled){background:var(--dsw-alias-interactive-bg-hover-danger);color:var(--dsw-alias-state-error-primary);border-color:transparent}
+.dwrm_primary{background:var(--dsw-alias-button-primary-fill);color:var(--dsw-alias-label-primary-foreground)}
+.dwrm_primary:hover:not(:disabled){background:var(--dsw-alias-button-primary-hover)}
 `
 
     /** Install (or refresh) the plugin stylesheet exactly once per page. */
@@ -110,7 +110,7 @@ window.__ModuleLoader__.load({
         return
       }
       const tag = document.createElement('style')
-      tag.dataset.plugin = 'dsh-why-reject'
+      tag.dataset.plugin = 'dsh-why-reject-me'
       tag.dataset.pluginCss = STYLE_ID
       tag.textContent = STYLE_TEXT
       ctx.effect(() => {
@@ -118,7 +118,7 @@ window.__ModuleLoader__.load({
         return () => {
           tag.remove()
         }
-      }, 'dsh-why-reject: panel stylesheet')
+      }, 'dsh-why-reject-me: panel stylesheet')
     }
 
     /** Resolve one failure into a short, localizable message. */
@@ -137,7 +137,7 @@ window.__ModuleLoader__.load({
       } catch {
         // fall through to the deterministic-enough fallback
       }
-      return 'why-reject-' + Date.now().toString(36) + '-' + Math.random().toString(36).slice(2, 10)
+      return 'why-reject-me-' + Date.now().toString(36) + '-' + Math.random().toString(36).slice(2, 10)
     }
 
     /** Sample the browser time zone; an invalid one would be rejected by the Host. */
@@ -338,7 +338,7 @@ window.__ModuleLoader__.load({
       return h('div', {
         className: css.root,
         'data-approval-key': pending.key,
-        'data-why-reject': 'approval',
+        'data-why-reject-me': 'approval',
         'aria-busy': busy,
         onKeyDown: keydown,
       }, h('div', { className: css.card }, [
@@ -408,7 +408,7 @@ window.__ModuleLoader__.load({
      */
     function apply(ctx) {
       installStyle(ctx)
-      ctx.effect(() => ctx.locale.register(NS, { zh, en }), 'dsh-why-reject: dictionaries')
+      ctx.effect(() => ctx.locale.register(NS, { zh, en }), 'dsh-why-reject-me: dictionaries')
       ctx.slots.inject('conversation.composer', () => ctx.slots.register({
         name: 'conversation.composer',
         // Lower number wins in a chain: the shipped approval takeover is 1,

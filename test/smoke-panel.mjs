@@ -88,7 +88,7 @@ const registration = registrations[0]
 const face = registration.options.inject()
 
 function t(key, params) {
-  const template = dictionaries['why-reject'].zh[key] ?? key
+  const template = dictionaries['why-reject-me'].zh[key] ?? key
   if (params === undefined) return template
   return Object.entries(params).reduce((text, [name, value]) => text.replaceAll(`{${name}}`, String(value)), template)
 }

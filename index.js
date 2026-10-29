@@ -1,5 +1,5 @@
 /**
- * Host half of `dsh-why-reject`.
+ * Host half of `dsh-why-reject-me`.
  *
  * The capability is entirely browser-side: the Client module takes over the
  * approval composer while a permission request is pending and sends the user's

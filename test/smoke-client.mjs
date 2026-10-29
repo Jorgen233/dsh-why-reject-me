@@ -15,7 +15,7 @@ globalThis.window = {
 
 await import(pathToFileURL(clientPath).href)
 if (!loaded) throw new Error('client module did not call __ModuleLoader__.load')
-if (loaded.id !== 'dsh-why-reject') throw new Error(`unexpected module id: ${loaded.id}`)
+if (loaded.id !== 'dsh-why-reject-me') throw new Error(`unexpected module id: ${loaded.id}`)
 
 const React = {
   createElement() {},
@@ -115,8 +115,8 @@ try {
 ctx.remote.session.prompt = originalPrompt
 if (!failed) throw new Error('failure envelope was treated as success')
 
-const zh = dictionaries['why-reject']?.zh
-const en = dictionaries['why-reject']?.en
+const zh = dictionaries['why-reject-me']?.zh
+const en = dictionaries['why-reject-me']?.en
 if (zh === undefined || en === undefined) throw new Error('missing dictionaries')
 const zhKeys = Object.keys(zh).sort()
 const enKeys = Object.keys(en).sort()

@@ -1,6 +1,6 @@
 {
-  "name": "dsh-why-reject",
-  "version": "0.1.0",
+  "name": "dsh-why-reject-me",
+  "version": "0.2.0",
   "private": true,
   "description": "Adds an optional rejection reason to DSH permission approval prompts and sends it to the model.",
   "type": "module",
