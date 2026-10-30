@@ -6,7 +6,7 @@ Adds an optional "rejection reason" field to DSH permission approval prompts. Wh
 
 > The code, tests, and documentation of this project are built and maintained entirely by DeepSeek.
 
-Status: `v0.3.2`; a real approval flow has been verified on DSH Desktop `0.2.1-rc.2`.
+Status: `v0.3.2`; a real approval flow and an agent-driven install from GitHub have been verified on DSH Desktop `0.2.1-rc.5`.
 
 ## Contents
 
@@ -60,7 +60,7 @@ Install from GitHub, or clone the repository for local development and debugging
 ### Requirements
 
 - **DSH Desktop.** The plugin runs in the approval panel embedded in DSH Desktop, and this project is verified only on Desktop. `dsh-TUI` does not use this panel.
-- Verified on DSH Desktop `0.2.1-rc.2`; see [Compatibility](#compatibility) for other versions.
+- Verified on DSH Desktop `0.2.1-rc.5`; see [Compatibility](#compatibility) for other versions.
 - Installing from GitHub requires **Git** and network access to GitHub.
 - Installation changes the current profile and **affects every session in that profile**.
 - The plugin runs as a Host plugin inside the DSH process; install it only from this repository or a copy you trust.
@@ -166,7 +166,7 @@ The plugin does not modify any package shipped with DSH; the Host half registers
 
 ## Compatibility
 
-- Verified environment: DSH Desktop `0.2.1-rc.2`; other run modes are unverified;
+- Verified environments: DSH Desktop `0.2.1-rc.2` and `0.2.1-rc.5`; both have been tested with a real approval flow, and other run modes are unverified;
 - Depends on the following public surfaces:
   - the `conversation.composer` chain slot and `priority`;
   - `PendingApproval.kind / answer / callId / key`;

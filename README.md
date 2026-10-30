@@ -6,7 +6,7 @@
 
 > 本项目的代码、测试与文档完全由 DeepSeek 搭建和维护。
 
-状态：`v0.3.2`，已在 DSH Desktop `0.2.1-rc.2` 上完成真实审批验证。
+状态：`v0.3.2`，已在 DSH Desktop `0.2.1-rc.5` 上完成真实审批验证，并验证了让 Agent 从 GitHub 直接安装。
 
 ## 目录
 
@@ -60,7 +60,7 @@ DSH 原生审批只有「允许一次 / 拒绝」两个动作。模型只知道�
 ### 前置条件
 
 - **DSH Desktop**。插件在 DSH Desktop 内嵌的审批界面中运行，本项目也只在 Desktop 中验证；`dsh-TUI` 不使用这个面板。
-- 在 DSH Desktop `0.2.1-rc.2` 上验证通过；其他版本见[兼容性](#兼容性)。
+- 在 DSH Desktop `0.2.1-rc.5` 上验证通过；其他版本见[兼容性](#兼容性)。
 - 从 GitHub 安装需要本机有 **Git**，并且能访问 GitHub。
 - 安装会修改当前 profile，**影响该 profile 下的所有会话**。
 - 插件以 Host 插件身份在 DSH 进程内运行；请只从本仓库或你信任的副本安装。
@@ -166,7 +166,7 @@ plugin_manager action=install_bundle target=git+https://github.com/Jorgen233/dsh
 
 ## 兼容性
 
-- 验证环境：DSH Desktop `0.2.1-rc.2`；其他运行方式未验证；
+- 验证环境：DSH Desktop `0.2.1-rc.2` 和 `0.2.1-rc.5`；两个版本都做过真实审批验证，其他运行方式未验证；
 - 依赖以下公开面：
   - `conversation.composer` 链式插槽与 `priority`；
   - `PendingApproval.kind / answer / callId / key`；
