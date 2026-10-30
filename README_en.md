@@ -6,7 +6,9 @@ Adds an optional "rejection reason" field to DSH permission approval prompts. Wh
 
 > The code, tests, and documentation of this project are built and maintained entirely by DeepSeek.
 
-Status: `v0.3.2`; a real approval flow and an agent-driven install from GitHub have been verified on DSH Desktop `0.2.1-rc.5`.
+[![npm](https://img.shields.io/npm/v/dsh-why-reject-me.svg)](https://www.npmjs.com/package/dsh-why-reject-me)
+
+Status: `v0.3.2`; a real approval flow, npm installation, and an agent-driven install from GitHub have been verified on DSH Desktop `0.2.1-rc.5`.
 
 ## Contents
 
@@ -55,26 +57,26 @@ The prefix follows the UI language: `[Approval request rejected] Reason: ` in En
 
 ## Install
 
-Install from GitHub, or clone the repository for local development and debugging.
+Published on npm as `dsh-why-reject-me`; you can also install from GitHub or a local clone.
 
 ### Requirements
 
 - **DSH Desktop.** The plugin runs in the approval panel embedded in DSH Desktop, and this project is verified only on Desktop. `dsh-TUI` does not use this panel.
 - Verified on DSH Desktop `0.2.1-rc.5`; see [Compatibility](#compatibility) for other versions.
-- Installing from GitHub requires **Git** and network access to GitHub.
+- Installing from npm does not require Git; installing from GitHub requires **Git** and network access to GitHub.
 - Installation changes the current profile and **affects every session in that profile**.
-- The plugin runs as a Host plugin inside the DSH process; install it only from this repository or a copy you trust.
+- The plugin runs as a Host plugin inside the DSH process; install it only from this repository, the npm package `dsh-why-reject-me`, or a copy you trust.
 
-### Option 1: Install from GitHub (recommended)
+### Option 1: Install from npm (recommended)
 
 **In DSH Desktop:**
 
 1. Open DSH Desktop and go to **Plugins** in the left sidebar.
 2. Click **Add plugin** → **Install a third-party plugin**.
-3. Enter the repository URL:
+3. Enter the package name:
 
    ```text
-   git+https://github.com/Jorgen233/dsh-why-reject-me.git
+   dsh-why-reject-me
    ```
 
 4. Click **Install**.
@@ -87,14 +89,32 @@ In a session where the `plugin_manager` tool is available (Creator mode by defau
 
 ```text
 Install this plugin in my DSH profile:
-plugin_manager action=install_bundle target=git+https://github.com/Jorgen233/dsh-why-reject-me.git
+plugin_manager action=install_bundle target=dsh-why-reject-me
 
 After installation, confirm the bundle is enabled and tell me whether I need to restart DSH Desktop.
 ```
 
 If `plugin_manager` is not available in the current session, use the Plugins page in DSH Desktop instead.
 
-### Option 2: Local clone / development
+### Option 2: Install from GitHub
+
+Use this to follow the source, or when the npm version is temporarily unavailable. Requires Git and network access to GitHub.
+
+In **Plugins → Add plugin**, enter:
+
+```text
+git+https://github.com/Jorgen233/dsh-why-reject-me.git
+```
+
+Agent equivalent:
+
+```text
+plugin_manager action=install_bundle target=git+https://github.com/Jorgen233/dsh-why-reject-me.git
+```
+
+Install, enable, and restart steps are the same as Option 1.
+
+### Option 3: Local clone / development
 
 Use this when you need to change the code or debug the plugin and already have a copy of the repository.
 
@@ -114,14 +134,14 @@ Local paths are installed as a `link:` dependency. Changes to `client.js` take e
 
 ### Update
 
-For a GitHub install:
+For an npm install:
 
 ```text
 plugin_manager action=remove_bundle target=dsh-why-reject-me
-plugin_manager action=install_bundle target=git+https://github.com/Jorgen233/dsh-why-reject-me.git
+plugin_manager action=install_bundle target=dsh-why-reject-me
 ```
 
-In DSH Desktop, the equivalent is to uninstall the bundle under **Plugins** and then **Add plugin** again. The same applies to a local path: point the target back to that path. Restart DSH Desktop after updating the Host half.
+For a GitHub install, use the Git URL as the target. In DSH Desktop, the equivalent is to uninstall the bundle under **Plugins** and then **Add plugin** again. The same applies to a local path: point the target back to that path. Restart DSH Desktop after updating the Host half.
 
 ### Verify the installation
 
@@ -209,7 +229,8 @@ After uninstalling, the approval panel returns to the native DSH style. Reasons 
 | Rejecting stays on "Submitting rejection reason…" | The Host route is not responding; restart Desktop and check whether a proxy or security tool is blocking the same-origin POST |
 | No field in a subagent session | Expected behavior; see [Known limitations](#known-limitations) |
 | The draft is lost after reloading the Desktop page | Expected behavior; drafts live only in page memory |
-| GitHub install fails or times out | Check that Git is installed and GitHub is reachable; or obtain a repository copy first and install from its local path |
+| npm install says the package cannot be found | Confirm the package is published; a mirror may lag, so switch to the official registry or retry later |
+| GitHub install fails or times out | Check that Git is installed and GitHub is reachable; use npm, or obtain a repository copy first and install from its local path |
 | The plugin list still shows a Chinese title | Upgrade to `0.3.2` or newer and restart Desktop to clear the old metadata cache |
 | Conflict with another approval plugin | Keep only one plugin that takes over `conversation.composer` |
 

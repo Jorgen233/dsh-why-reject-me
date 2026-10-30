@@ -6,7 +6,9 @@
 
 > 本项目的代码、测试与文档完全由 DeepSeek 搭建和维护。
 
-状态：`v0.3.2`，已在 DSH Desktop `0.2.1-rc.5` 上完成真实审批验证，并验证了让 Agent 从 GitHub 直接安装。
+[![npm](https://img.shields.io/npm/v/dsh-why-reject-me.svg)](https://www.npmjs.com/package/dsh-why-reject-me)
+
+状态：`v0.3.2`，已在 DSH Desktop `0.2.1-rc.5` 上完成真实审批验证，并验证了 npm 安装和让 Agent 从 GitHub 直接安装。
 
 ## 目录
 
@@ -55,26 +57,26 @@ DSH 原生审批只有「允许一次 / 拒绝」两个动作。模型只知道�
 
 ## 安装
 
-从 GitHub 安装，或克隆到本地开发和调试。
+插件以包名 `dsh-why-reject-me` 发布在 npm；也可以从 GitHub 或本地目录安装。
 
 ### 前置条件
 
 - **DSH Desktop**。插件在 DSH Desktop 内嵌的审批界面中运行，本项目也只在 Desktop 中验证；`dsh-TUI` 不使用这个面板。
 - 在 DSH Desktop `0.2.1-rc.5` 上验证通过；其他版本见[兼容性](#兼容性)。
-- 从 GitHub 安装需要本机有 **Git**，并且能访问 GitHub。
+- 从 npm 安装不需要 Git；从 GitHub 安装需要本机有 **Git**，并且能访问 GitHub。
 - 安装会修改当前 profile，**影响该 profile 下的所有会话**。
-- 插件以 Host 插件身份在 DSH 进程内运行；请只从本仓库或你信任的副本安装。
+- 插件以 Host 插件身份在 DSH 进程内运行；请只从本仓库、npm 上的 `dsh-why-reject-me` 或你信任的副本安装。
 
-### 方式一：从 GitHub 安装（推荐）
+### 方式一：从 npm 安装（推荐）
 
 **在 DSH Desktop 中：**
 
 1. 打开 DSH Desktop，进入左侧 **Plugins（插件）** 页面。
 2. 点 **Add plugin（添加插件）** → **Install a third-party plugin（安装第三方插件）**。
-3. 填入仓库地址：
+3. 输入包名：
 
    ```text
-   git+https://github.com/Jorgen233/dsh-why-reject-me.git
+   dsh-why-reject-me
    ```
 
 4. 点 **Install（安装）**。
@@ -87,14 +89,32 @@ DSH 原生审批只有「允许一次 / 拒绝」两个动作。模型只知道�
 
 ```text
 请在我的 DSH profile 中安装这个插件：
-plugin_manager action=install_bundle target=git+https://github.com/Jorgen233/dsh-why-reject-me.git
+plugin_manager action=install_bundle target=dsh-why-reject-me
 
 安装完成后确认 bundle 已启用，并告诉我是否需要重启 DSH Desktop。
 ```
 
 如果当前会话没有 `plugin_manager`，改用 DSH Desktop 的 Plugins 页面。
 
-### 方式二：本地克隆 / 开发
+### 方式二：从 GitHub 安装
+
+适合想跟源码、或 npm 上暂时没有所需版本时。需要本机有 Git，并能访问 GitHub。
+
+在 **Plugins → Add plugin** 中填写：
+
+```text
+git+https://github.com/Jorgen233/dsh-why-reject-me.git
+```
+
+Agent 等价写法：
+
+```text
+plugin_manager action=install_bundle target=git+https://github.com/Jorgen233/dsh-why-reject-me.git
+```
+
+安装、启用和重启步骤与方式一相同。
+
+### 方式三：本地克隆 / 开发
 
 适合需要改代码或调试插件，并且已经能取得仓库副本的情况。
 
@@ -114,14 +134,14 @@ G:\Dev\dsh-why-reject-me
 
 ### 更新
 
-GitHub 安装：
+npm 安装：
 
 ```text
 plugin_manager action=remove_bundle target=dsh-why-reject-me
-plugin_manager action=install_bundle target=git+https://github.com/Jorgen233/dsh-why-reject-me.git
+plugin_manager action=install_bundle target=dsh-why-reject-me
 ```
 
-在 DSH Desktop 中等价于：在 **Plugins** 里卸载后重新 **Add plugin**。本地路径安装同理，把 target 换回对应的路径即可。更新 Host 半后需要重启 DSH Desktop。
+在 DSH Desktop 中等价于：在 **Plugins** 里卸载后重新 **Add plugin**。GitHub / 本地路径安装同理，把 target 换回对应的地址或路径即可。更新 Host 半后需要重启 DSH Desktop。
 
 ### 确认安装
 
@@ -209,7 +229,8 @@ plugin_manager action=remove_bundle target=dsh-why-reject-me
 | 点拒绝后一直停在「正在提交原因…」 | Host 路由没有响应；重启 Desktop，并检查是否有代理或安全软件拦截同源 POST |
 | 子代理会话没有输入框 | 预期行为，见[已知限制](#已知限制) |
 | 刷新 Desktop 页面后草稿丢了 | 预期行为，草稿只存在页面内存中 |
-| GitHub 安装失败或超时 | 确认本机有 Git、能访问 GitHub；或先取得仓库副本后填本地路径 |
+| npm 安装提示找不到包 | 确认包已发布；镜像可能有同步延迟，换官方 registry 或稍后重试 |
+| GitHub 安装失败或超时 | 确认本机有 Git、能访问 GitHub；改用 `npm` 安装，或本地克隆后填绝对路径 |
 | 插件列表显示的不是英文名 | 升级到 `0.3.2` 或更新版本，并重启 Desktop 清除旧元数据缓存 |
 | 和其他审批插件冲突 | 只保留一个接管 `conversation.composer` 的审批插件 |
 
