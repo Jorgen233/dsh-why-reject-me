@@ -3,6 +3,23 @@
   "version": "0.3.2",
   "private": true,
   "description": "Adds an optional rejection reason to DSH permission approval prompts and delivers it with the rejected tool result.",
+  "license": "MIT",
+  "author": "Jorgen233",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Jorgen233/dsh-why-reject-me.git"
+  },
+  "homepage": "https://github.com/Jorgen233/dsh-why-reject-me#readme",
+  "bugs": {
+    "url": "https://github.com/Jorgen233/dsh-why-reject-me/issues"
+  },
+  "keywords": [
+    "dsh",
+    "dsh-plugin",
+    "approval",
+    "permission",
+    "cordis"
+  ],
   "type": "module",
   "scripts": {
     "test": "node test/smoke-client.mjs && node test/smoke-panel.mjs && node test/smoke-host.mjs"
