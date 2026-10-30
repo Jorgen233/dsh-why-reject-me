@@ -8,7 +8,7 @@ Adds an optional "rejection reason" field to DSH permission approval prompts. Wh
 
 [![npm](https://img.shields.io/npm/v/dsh-why-reject-me.svg)](https://www.npmjs.com/package/dsh-why-reject-me)
 
-Status: `v0.3.2`; a real approval flow, npm installation, and an agent-driven install from GitHub have been verified on DSH Desktop `0.2.1-rc.5`.
+Status: `v0.3.3`; a real approval flow, npm installation, and an agent-driven install from GitHub have been verified on DSH Desktop `0.2.1-rc.5`.
 
 ## Contents
 

@@ -8,7 +8,7 @@
 
 [![npm](https://img.shields.io/npm/v/dsh-why-reject-me.svg)](https://www.npmjs.com/package/dsh-why-reject-me)
 
-状态：`v0.3.2`，已在 DSH Desktop `0.2.1-rc.5` 上完成真实审批验证，并验证了 npm 安装和让 Agent 从 GitHub 直接安装。
+状态：`v0.3.3`，已在 DSH Desktop `0.2.1-rc.5` 上完成真实审批验证，并验证了 npm 安装和让 Agent 从 GitHub 直接安装。
 
 ## 目录
 
