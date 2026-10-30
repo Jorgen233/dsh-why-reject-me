@@ -1,7 +1,6 @@
 {
   "name": "dsh-why-reject-me",
   "version": "0.3.2",
-  "private": true,
   "description": "Adds an optional rejection reason to DSH permission approval prompts and delivers it with the rejected tool result.",
   "license": "MIT",
   "author": "Jorgen233",
@@ -20,6 +19,9 @@
     "permission",
     "cordis"
   ],
+  "publishConfig": {
+    "access": "public"
+  },
   "type": "module",
   "scripts": {
     "test": "node test/smoke-client.mjs && node test/smoke-panel.mjs && node test/smoke-host.mjs"
